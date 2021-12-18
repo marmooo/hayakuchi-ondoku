@@ -1,6 +1,6 @@
 # 早口音読
 
-[早口言葉で音読の練習をするゲーム](https://marmooo.github.io/talk-quiz-en/)です。
+[早口言葉で音読の練習をするゲーム](https://marmooo.github.io/hayakuchi-ondoku/)です。
 
 ## Installation
 
