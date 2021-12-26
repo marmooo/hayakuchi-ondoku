@@ -146,7 +146,7 @@ const numbersToKanji = (num) => {
 function formatSentence(sentence) {
   return hiraToKana(sentence)
     .toLowerCase()
-    .replace(/[\s・。、「」!！?？]/g, "")
+    .replace(/[\s　・。、「」!！?？]/g, "")
     .replace(/\d+/g, (n) => numbersToKanji(n));
 }
 
