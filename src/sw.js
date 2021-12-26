@@ -1,4 +1,4 @@
-var CACHE_NAME = '2021-12-18 20:50';
+var CACHE_NAME = '2021-12-26 14:15';
 var urlsToCache = [
   "/hayakuchi-ondoku/",
   "/hayakuchi-ondoku/index.js",
@@ -11,7 +11,6 @@ var urlsToCache = [
   "/hayakuchi-ondoku/favicon/original.svg",
   "/hayakuchi-ondoku/kohacu.webp",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",
-  "https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css",
 ];
 
 self.addEventListener("install", function (event) {
