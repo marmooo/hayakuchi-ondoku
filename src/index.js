@@ -146,8 +146,9 @@ function nextProblem() {
 
 function initProblems() {
   const grade = document.getElementById("grade").selectedIndex;
-  fetch("data/" + grade + ".csv").then((response) => response.text()).then(
-    (csv) => {
+  fetch("data/" + grade + ".csv")
+    .then((response) => response.text())
+    .then((csv) => {
       problems = [];
       csv.split("\n").forEach((line) => {
         if (line.startsWith("#")) return true;
@@ -157,8 +158,7 @@ function initProblems() {
         const [sentence, yomi] = line.split(",");
         problems.push([sentence, yomi]);
       });
-    },
-  );
+    });
 }
 
 function setVoiceInput() {
@@ -200,24 +200,26 @@ function setVoiceInput() {
 }
 
 function initYomiDict() {
-  fetch("data/yomi.csv").then((response) => response.text()).then((csv) => {
-    csv.trim().split("\n").forEach((line) => {
-      const arr = line.split(",");
-      const yomi = arr[0];
-      const kanjis = arr.slice(1);
-      for (const kanji of kanjis) {
-        if (kanji in yomiDict) {
-          yomiDict[kanji].push(yomi);
-        } else {
-          yomiDict[kanji] = [yomi];
+  fetch("data/yomi.csv")
+    .then((response) => response.text())
+    .then((csv) => {
+      csv.trim().split("\n").forEach((line) => {
+        const arr = line.split(",");
+        const yomi = arr[0];
+        const kanjis = arr.slice(1);
+        for (const kanji of kanjis) {
+          if (kanji in yomiDict) {
+            yomiDict[kanji].push(yomi);
+          } else {
+            yomiDict[kanji] = [yomi];
+          }
         }
+      });
+      // 英単語は Object.entries だと危険なので注意
+      for (const [kanji, yomis] of Object.entries(yomiDict)) {
+        yomiDict[kanji] = yomis.sort((a, b) => b.length - a.length);
       }
     });
-    // 英単語は Object.entries だと危険なので注意
-    for (const [kanji, yomis] of Object.entries(yomiDict)) {
-      yomiDict[kanji] = yomis.sort((a, b) => b.length - a.length);
-    }
-  });
 }
 
 /**
