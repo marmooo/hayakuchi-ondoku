@@ -163,7 +163,7 @@ function initProblems() {
 
 function setVoiceInput() {
   if (!("webkitSpeechRecognition" in window)) {
-    document.getElementById("nosupport").classList.remove("d-none");
+    document.getElementById("noSTT").classList.remove("d-none");
   } else {
     const voiceInput = new webkitSpeechRecognition();
     voiceInput.lang = "ja-JP";
