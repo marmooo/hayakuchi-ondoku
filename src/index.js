@@ -1,3 +1,4 @@
+const gameTime = 120;
 const yomiDict = {};
 let problem = "";
 let problems = [];
@@ -93,13 +94,13 @@ function loadAudios() {
 
 function loadVoices() {
   // https://stackoverflow.com/questions/21513706/
-  const allVoicesObtained = new Promise(function (resolve) {
+  const allVoicesObtained = new Promise((resolve) => {
     let voices = speechSynthesis.getVoices();
     if (voices.length !== 0) {
       resolve(voices);
     } else {
       let supported = false;
-      speechSynthesis.addEventListener("voiceschanged", function () {
+      speechSynthesis.addEventListener("voiceschanged", () => {
         supported = true;
         voices = speechSynthesis.getVoices();
         resolve(voices);
@@ -421,7 +422,7 @@ function isEquals(reply, answer) {
 }
 
 function hiraToKana(str) {
-  return str.replace(/[\u3041-\u3096]/g, function (match) {
+  return str.replace(/[\u3041-\u3096]/g, (match) => {
     const chr = match.charCodeAt(0) + 0x60;
     return String.fromCharCode(chr);
   });
@@ -444,12 +445,11 @@ let gameTimer;
 function startGameTimer() {
   clearInterval(gameTimer);
   const timeNode = document.getElementById("time");
-  timeNode.innerText = "120秒 / 120秒";
-  gameTimer = setInterval(function () {
-    const arr = timeNode.innerText.split("秒 /");
-    const t = parseInt(arr[0]);
+  initTime();
+  gameTimer = setInterval(() => {
+    const t = parseInt(timeNode.textContent);
     if (t > 0) {
-      timeNode.innerText = (t - 1) + "秒 /" + arr[1];
+      timeNode.innerText = t - 1;
     } else {
       clearInterval(gameTimer);
       playAudio(endAudio);
@@ -460,6 +460,10 @@ function startGameTimer() {
   }, 1000);
 }
 
+function initTime() {
+  document.getElementById("time").textContent = gameTime;
+}
+
 let countdownTimer;
 function countdown() {
   clearTimeout(countdownTimer);
@@ -468,7 +472,7 @@ function countdown() {
   scorePanel.classList.add("d-none");
   const counter = document.getElementById("counter");
   counter.innerText = 3;
-  countdownTimer = setInterval(function () {
+  countdownTimer = setInterval(() => {
     const colors = ["skyblue", "greenyellow", "violet", "tomato"];
     if (parseInt(counter.innerText) > 1) {
       const t = parseInt(counter.innerText) - 1;

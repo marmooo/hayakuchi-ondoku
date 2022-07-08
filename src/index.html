@@ -49,7 +49,7 @@
         <div class="container flex-wrap">
           <a class="navbar-brand" href="/hayakuchi-ondoku/">
             <img alt="早口音読" src="/hayakuchi-ondoku/favicon/favicon.svg" width="32" height="32">
-            <ruby>早口<rp>(</rp><rt>はやくち</rt><rp>)</rp></ruby><ruby>音読<rp>(</rp><rt>おんどく</rt><rp>)</rp></ruby>
+            早口音読
           </a>
           <div class="navbar-nav">
             <select id="grade" class="form-select form-select-sm" aria-label="学年">
@@ -87,34 +87,32 @@ sudo apt install festival speech-dispatcher-festival</code></pre>
         </div>
       </div>
       <div id="scorePanel" class="text-center pb-3 d-none">
-        <h3 class="pt-3">
-          <ruby>結果<rp>(</rp><rt>けっか</rt><rp>)</rp></ruby>
-        </h3>
+        <h3 class="pt-3">スコア</h3>
         <img class="kohacu" src="kohacu.webp" width="256" height="256" alt="kohacu">
         <p>クリアしたのは・・・</p>
-        <div class="h2 pb-3">
+        <div class="h2 pb-3 notranslate">
           <span id="score" class="h1">0</span>
-          <ruby>問<rp>(</rp><rt>もん</rt><rp>)</rp></ruby>！
         </div>
         <button id="restartButton" type="button" class="btn btn-primary btn-lg m-1">リスタート</button>
       </div>
       <div id="playPanel">
         <div class="row">
-          <div class="col-sm">
-            <p><ruby>早口<rt>はやくち</rt></ruby><ruby>言葉<rt>ことば</rt></ruby>で<ruby>音読<rt>おんどく</rt></ruby>の<ruby>練習<rt>れんしゅう</rt></ruby>をするゲームです。</p>
+          <div class="col-md">
+            <p>早口言葉で音読の練習をするゲームです。
+            </p>
           </div>
-          <div class="col-sm">
+          <div class="col-md">
             <div class="alert alert-info text-center">
-              <div class="h5">
-                <label><ruby>時間<rp>(</rp><rt>じかん</rt><rp>)</rp></ruby>:</label>
-                <span id="time" class="ms-1">120秒 / 120秒</span>
+              <div class="h5 text-nowrap notranslate">
+                <span id="time">120</span>
+                <span> / 120 sec</span>
               </div>
               <button id="startButton" class="btn btn-primary btn-lg">スタート</button>
             </div>
           </div>
         </div>
         <div class="text-center">
-          <div class="alert alert-primary">
+          <div class="alert alert-primary notranslate">
             <h3>
               <button id="respeak" class="btn p-0 me-1">🔊</button>
               <span id="problem">生麦生米生卵</span>
@@ -139,8 +137,8 @@ sudo apt install festival speech-dispatcher-festival</code></pre>
         <label>サポート状況 (2022):</label>
         <table class="table table-sm table-striped w-auto m-auto text-nowrap">
           <tbody>
-            <tr><th></th><th>Chrome</th><th>Edge</th><th>Safari</th><th>Firefox</th></tr>
-            <tr><td>音声認識</td><td>○</td><td>×</td><td>×</td><td>×</td></tr>
+            <tr class="notranslate"><th></th><th>Chrome</th><th>Edge</th><th>Safari</th><th>Firefox</th></tr>
+            <tr><td>音声認識</td><td>⭕</td><td>❌</td><td>❌</td><td>❌</td></tr>
           </tbody>
         </table>
       </div>
