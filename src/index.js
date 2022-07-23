@@ -345,9 +345,9 @@ function isEquals(reply, answer) {
   let j = 1;
   let k = 0;
   let l = 0;
-  let pi = 0;
-  let pk = 0;
-  let pj = 1;
+  let pi = [0];
+  let pk = [0];
+  let pj = [1];
   let pl = [];
   while (i < formatedReply.length) {
     cnt += 1;
@@ -367,48 +367,45 @@ function isEquals(reply, answer) {
       if (matched.length > 0) {
         const yomi = matched[l];
         if (yomi) {
-          pi = i;
-          pj = j;
-          pk = k;
+          pi.push(i);
+          pj.push(j);
+          pk.push(k);
           i += j;
           k += yomi.length;
           j = 1;
           l = 0;
           if (i == formatedReply.length) break;
         } else {
-          j = pj + 1;
+          j = pj.at(-1) + 1;
           l = 0;
         }
       } else { // 辞書に登録はされているが読みの選択が悪く一致しない時など
         if (j == maxLength) {
-          i = pi; // 前の文字に戻って
-          j = pj;
-          k = pk;
-          l += 1; // 別の読みにする (pl に残ってないのでやり直し)
+          i = pi.pop(); // 前の文字に戻って
+          j = pj.pop() + 1;  // gram を増やす
+          k = pk.pop();
         } else { // gramを増やして一致をさがす
           j += 1;
-          l = 0;
         }
       }
     } else if (str == formatedAnswer.slice(k, k + j)) {
-      pj = j;
+      pj.push(j);
       i += j;
       k += j;
       l = 0;
       j = 1;
-      pi = i;
-      pk = k;
+      pi.push(i);
+      pk.push(k);
       if (i == formatedReply.length) break;
       // 辞書に読みが登録されていない時
     } else {
       if (pl.length > l + 1) { // 読みが複数あれば
         l += 1;
-        k = pk + pl[l].length; // その読みを試してみる
+        k = pk.at(-1) + pl[l].length; // その読みを試してみる
       } else if (j == maxLength) { // 前方の読みが合わないなら
-        i = pi; // 前の文字に戻って
-        j = pj;
-        k = pk;
-        j = pj + 1; // gram を増やす
+        i = pi.pop(); // 前の文字に戻って
+        j = pj.pop() + 1; // gram を増やす
+        k = pk.pop();
       } else { // gramを増やして一致をさがす
         j += 1;
       }

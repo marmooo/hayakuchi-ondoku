@@ -95,24 +95,24 @@ async function parseOnkun(dict) {
         const p2 = RegExp.$2.length;
         const kanji = lemma.slice(p1, p1 + 1);
         const kun = yomi.slice(p1, yomi.length - p2);
-        if (RegExp.$1 == yomi.slice(0, p1) && RegExp.$2 == yomi.slice(p1 + 1)) {
-          if (kun in dict) {
-            dict[kun].push(kanji);
-          } else {
-            dict[kun] = [kanji];
-          }
-          if (lemma.length > 1) {
-            let kanjis = dict[yomi];
-            if (kanjis) { // lemma.length > 5
-              kanjis = kanjis.filter((x) => x != hiraToKana(lemma));
-              if (kanjis.length > 0) {
-                dict[yomi] = kanjis;
-              } else {
-                delete dict[yomi];
-              }
+        if (kun in dict) {
+          dict[kun].push(kanji);
+        } else {
+          dict[kun] = [kanji];
+        }
+        if (lemma.length > 1) {
+          let kanjis = dict[yomi];
+          if (kanjis) { // lemma.length > 5
+            kanjis = kanjis.filter((x) => x != hiraToKana(lemma));
+            if (kanjis.length > 0) {
+              dict[yomi] = kanjis;
+            } else {
+              delete dict[yomi];
             }
           }
         }
+      } else if (/^[一-龠々ヵヶ]+$/.test(lemma) && leftId != "-1") {
+        dict[lemma] = yomi;
       }
     }
   }
