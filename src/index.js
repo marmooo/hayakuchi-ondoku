@@ -1,5 +1,5 @@
 const gameTime = 120;
-const yomiDict = {};
+let yomiDict = new Map();
 let problem = "";
 let problems = [];
 let answer = "生麦生米生卵";
@@ -192,7 +192,7 @@ function setVoiceInput() {
     voiceInput.onresult = (event) => {
       const reply = event.results[0][0].transcript;
       const replyObj = document.getElementById("reply");
-      if (isEquals(reply, answer) || isEquals(reply, answer.slice(0, -1))) {
+      if (isEquals(reply, answer, yomiDict) || isEquals(reply, answer.slice(0, -1), yomiDict)) {
         correctCount += 1;
         playAudio(correctAudio);
         replyObj.textContent = "◯ " + answer;
@@ -207,26 +207,33 @@ function setVoiceInput() {
   }
 }
 
-function initYomiDict() {
+async function initYomiDict() {
+  // https://jsben.ch/q4RPK
+  const dict = new Map();
   fetch("data/yomi.csv")
     .then((response) => response.text())
     .then((csv) => {
-      csv.trim().split("\n").forEach((line) => {
-        const arr = line.split(",");
-        const yomi = arr[0];
-        const kanjis = arr.slice(1);
-        for (const kanji of kanjis) {
-          if (kanji in yomiDict) {
-            yomiDict[kanji].push(yomi);
-          } else {
-            yomiDict[kanji] = [yomi];
+      csv.trimEnd().split("\n").forEach((line) => {
+        line.split("\n").forEach((line) => {
+          const arr = line.split(",");
+          const yomi = arr[0];
+          const kanjis = arr.slice(1);
+          for (const kanji of kanjis) {
+            if (dict.has(kanji)) {
+              const yomis = dict.get(kanji);
+              yomis.push(yomi);
+              dict.set(kanji, yomis);
+            } else {
+              dict.set(kanji, [yomi]);
+            }
           }
-        }
+        });
       });
-      // 英単語は Object.entries だと危険なので注意
-      for (const [kanji, yomis] of Object.entries(yomiDict)) {
-        yomiDict[kanji] = yomis.sort((a, b) => b.length - a.length);
+      for (const [kanji, yomis] of dict) {
+        const sortedYomis = yomis.sort((a, b) => b.length - a.length);
+        dict.set(kanji, sortedYomis);
       }
+      yomiDict = dict;
     });
 }
 
@@ -334,12 +341,13 @@ function formatSentence(sentence) {
     .replace(/\d+/g, (n) => numbersToKanji(n));
 }
 
-function isEquals(reply, answer) {
+function isEquals(reply, answer, yomiDict) {
   // 音声認識では記号が付かないので、解答側で使う一部記号だけを揃える
   const formatedReply = formatSentence(reply);
   const formatedAnswer = formatSentence(answer);
   const maxLength = 5; // build.js で制限して高速化 (普通は残り文字数)
-  const stop = formatedAnswer.length * (formatedAnswer.length + 1) / 2 + 1;
+  const maxYomiNum = 10; // yomi-dict の最大読み方パターン数
+  const stop = formatedAnswer.length * formatedAnswer.length * maxYomiNum;
   let cnt = 0;
   let i = 0;
   let j = 1;
@@ -353,8 +361,8 @@ function isEquals(reply, answer) {
     cnt += 1;
     if (cnt > stop) return false;
     const str = formatedReply.slice(i, i + j);
-    if (str in yomiDict) {
-      const yomis = yomiDict[str];
+    if (yomiDict.has(str)) {
+      const yomis = yomiDict.get(str);
       const matched = yomis.filter((yomi) => {
         const check = formatedAnswer.slice(k, k + yomi.length);
         if (yomi == check) {
@@ -374,18 +382,35 @@ function isEquals(reply, answer) {
           k += yomi.length;
           j = 1;
           l = 0;
-          if (i == formatedReply.length) break;
+          if (i == formatedReply.length) {
+            if (k == formatedAnswer.length) {
+              break;
+            } else {
+              pi.pop();
+              pj.pop();
+              pk.pop();
+              i = pi.pop(); // 前の文字に戻って
+              j = pj.pop() + 1; // gram を増やす
+              k = pk.pop();
+            }
+          }
         } else {
           j = pj.at(-1) + 1;
           l = 0;
         }
       } else { // 辞書に登録はされているが読みの選択が悪く一致しない時など
-        if (j == maxLength) {
-          i = pi.pop(); // 前の文字に戻って
-          j = pj.pop() + 1;  // gram を増やす
-          k = pk.pop();
+        if (j >= maxLength || j >= formatedAnswer.length) {
+          if (pi.length == 0) {
+            j += 1;
+            l += 0;
+          } else {
+            i = pi.pop(); // 前の文字に戻って
+            j = pj.pop() + 1; // gram を増やす
+            k = pk.pop();
+          }
         } else { // gramを増やして一致をさがす
           j += 1;
+          l = 0;
         }
       }
     } else if (str == formatedAnswer.slice(k, k + j)) {
