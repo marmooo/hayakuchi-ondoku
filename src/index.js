@@ -192,7 +192,10 @@ function setVoiceInput() {
     voiceInput.onresult = (event) => {
       const reply = event.results[0][0].transcript;
       const replyObj = document.getElementById("reply");
-      if (isEquals(reply, answer, yomiDict) || isEquals(reply, answer.slice(0, -1), yomiDict)) {
+      if (
+        isEquals(reply, answer, yomiDict) ||
+        isEquals(reply, answer.slice(0, -1), yomiDict)
+      ) {
         correctCount += 1;
         playAudio(correctAudio);
         replyObj.textContent = "◯ " + answer;
