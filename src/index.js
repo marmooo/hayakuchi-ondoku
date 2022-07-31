@@ -210,10 +210,10 @@ function setVoiceInput() {
   }
 }
 
-async function initYomiDict() {
+function initYomiDict() {
   // https://jsben.ch/q4RPK
   const dict = new Map();
-  fetch("data/yomi.csv")
+  return fetch("data/yomi.csv")
     .then((response) => response.text())
     .then((csv) => {
       csv.trimEnd().split("\n").forEach((line) => {
@@ -356,9 +356,9 @@ function isEquals(reply, answer, yomiDict) {
   let j = 1;
   let k = 0;
   let l = 0;
-  let pi = [0];
-  let pk = [0];
-  let pj = [1];
+  const pi = [0];
+  const pk = [0];
+  const pj = [1];
   let pl = [];
   while (i < formatedReply.length) {
     cnt += 1;
