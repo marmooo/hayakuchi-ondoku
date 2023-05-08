@@ -62,7 +62,10 @@ const numbersToKanji = (num) => {
     return "";
   }
   if (!(/^-?[0-9]+$/g.test(num))) {
-    throw new TypeError("半角数字以外の文字が含まれています。漢数字に変換できませんでした。-> " + num);
+    throw new TypeError(
+      "半角数字以外の文字が含まれています。漢数字に変換できませんでした。-> " +
+        num,
+    );
   }
   num = Number(num);
   if (!Number.isSafeInteger(num)) {
@@ -165,9 +168,9 @@ function isEquals(reply, answer, yomiDict) {
   let j = 1;
   let k = 0;
   let l = 0;
-  let pi = [0];
-  let pk = [0];
-  let pj = [1];
+  const pi = [0];
+  const pk = [0];
+  const pj = [1];
   let pl = [];
   while (i < formatedReply.length) {
     cnt += 1;
