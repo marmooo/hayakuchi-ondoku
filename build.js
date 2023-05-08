@@ -60,7 +60,9 @@ async function loadSudachiDict() {
       const leftId = arr[1];
       const yomi = arr[11];
       // 文字数の制約を付けておくと解析が高速になる
-      if (/[a-zA-Z一-龠々ヵヶ]/.test(lemma) && lemma.length <= 5 && leftId != "-1") {
+      if (
+        /[a-zA-Z一-龠々ヵヶ]/.test(lemma) && lemma.length <= 5 && leftId != "-1"
+      ) {
         if (yomi in dict) {
           dict[yomi].push(lemma);
         } else {
@@ -87,12 +89,15 @@ async function parseOnkun(dict) {
     for await (const line of readLines(fileReader)) {
       if (!line) continue;
       const arr = line.split(",");
-      const lemma = arr[0];
       const leftId = arr[1];
+      if (leftId == "-1") continue;
+      const lemma = arr[0];
       const yomi = arr[11];
-      if (/^([ぁ-んァ-ヴー]*)[一-龠々ヵヶ]([ぁ-んァ-ヴー]*)$/.test(lemma) && leftId != "-1") {
-        const p1 = RegExp.$1.length;
-        const p2 = RegExp.$2.length;
+      const regexp = /^([ぁ-んァ-ヴー]*)[一-龠々ヵヶ]([ぁ-んァ-ヴー]*)$/;
+      const matchResult = lemma.match(regexp);
+      if (matchResult) {
+        const p1 = matchResult[1].length;
+        const p2 = matchResult[2].length;
         const kanji = lemma.slice(p1, p1 + 1);
         const kun = yomi.slice(p1, yomi.length - p2);
         if (kun in dict) {
@@ -111,7 +116,7 @@ async function parseOnkun(dict) {
             }
           }
         }
-      } else if (/^[一-龠々ヵヶ]+$/.test(lemma) && leftId != "-1") {
+      } else if (/^[一-龠々ヵヶ]+$/.test(lemma)) {
         dict[lemma] = yomi;
       }
     }
