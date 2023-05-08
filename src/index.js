@@ -9,7 +9,7 @@ const audioBufferCache = {};
 loadAudio("end", "mp3/end.mp3");
 loadAudio("correct", "mp3/correct3.mp3");
 loadAudio("incorrect", "mp3/incorrect1.mp3");
-let englishVoices = [];
+let japaneseVoices = [];
 loadVoices();
 const voiceInput = setVoiceInput();
 loadConfig();
@@ -98,7 +98,7 @@ function loadVoices() {
     }
   });
   allVoicesObtained.then((voices) => {
-    englishVoices = voices.filter((voice) => voice.lang == "ja-JP");
+    japaneseVoices = voices.filter((voice) => voice.lang == "ja-JP");
   });
 }
 loadVoices();
@@ -109,7 +109,7 @@ function speak(text) {
   msg.onend = () => {
     voiceInput.start();
   };
-  msg.voice = englishVoices[Math.floor(Math.random() * englishVoices.length)];
+  msg.voice = japaneseVoices[Math.floor(Math.random() * japaneseVoices.length)];
   msg.lang = "ja-JP";
   voiceInput.stop();
   speechSynthesis.speak(msg);
