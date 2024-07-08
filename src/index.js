@@ -450,11 +450,8 @@ function startVoiceInput() {
 }
 
 function stopVoiceInput() {
-  const startButton = document.getElementById("startVoiceInput");
-  const stopButton = document.getElementById("stopVoiceInput");
-  startButton.classList.remove("d-none");
-  stopButton.classList.add("d-none");
-  document.getElementById("reply").textContent = "英語で答えてください";
+  document.getElementById("startVoiceInput").classList.remove("d-none");
+  document.getElementById("stopVoiceInput").classList.add("d-none");
   voiceInput.stop();
 }
 
