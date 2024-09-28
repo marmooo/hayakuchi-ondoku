@@ -1,4 +1,10 @@
-import { readLines } from "https://deno.land/std/io/mod.ts";
+import { TextLineStream } from "jsr:@std/streams/text-line-stream";
+
+function getLineStream(file) {
+  return file.readable
+    .pipeThrough(new TextDecoderStream())
+    .pipeThrough(new TextLineStream());
+}
 
 function hiraToKana(str) {
   return str.replace(/[\u3041-\u3096]/g, function (match) {
@@ -27,9 +33,8 @@ async function getMorphemes(dict) {
     "src/data/1.csv",
   ];
   for (const csvFile of csvFiles) {
-    const fileReader = await Deno.open(csvFile);
-    for await (const line of readLines(fileReader)) {
-      if (!line) continue;
+    const file = await Deno.open(csvFile);
+    for await (const line of getLineStream(file)) {
       if (line.startsWith("#")) continue;
       // if (line.startsWith("#")) {
       //   line = line.slice(2);
@@ -52,9 +57,8 @@ async function loadSudachiDict() {
     "SudachiDict/src/main/text/notcore_lex.csv",
   ];
   for (const path of paths) {
-    const fileReader = await Deno.open(path);
-    for await (const line of readLines(fileReader)) {
-      if (!line) continue;
+    const file = await Deno.open(path);
+    for await (const line of getLineStream(file)) {
       const arr = line.split(",");
       const lemma = hiraToKana(arr[0]);
       const leftId = arr[1];
@@ -85,9 +89,8 @@ async function parseOnkun(dict) {
     "SudachiDict/src/main/text/notcore_lex.csv",
   ];
   for (const path of paths) {
-    const fileReader = await Deno.open(path);
-    for await (const line of readLines(fileReader)) {
-      if (!line) continue;
+    const file = await Deno.open(path);
+    for await (const line of getLineStream(file)) {
       const arr = line.split(",");
       const leftId = arr[1];
       if (leftId == "-1") continue;
@@ -134,9 +137,8 @@ async function removeIdiom2(dict) {
     "SudachiDict/src/main/text/notcore_lex.csv",
   ];
   for (const path of paths) {
-    const fileReader = await Deno.open(path);
-    for await (const line of readLines(fileReader)) {
-      if (!line) continue;
+    const file = await Deno.open(path);
+    for await (const line of getLineStream(file)) {
       const arr = line.split(",");
       const lemma = arr[0];
       const yomi = hiraToKana(arr[11]);

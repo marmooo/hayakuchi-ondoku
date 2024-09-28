@@ -1,5 +1,11 @@
 import { assertEquals } from "https://deno.land/std/assert/mod.ts";
-import { readLines } from "https://deno.land/std/io/mod.ts";
+import { TextLineStream } from "jsr:@std/streams/text-line-stream";
+
+function getLineStream(file) {
+  return file.readable
+    .pipeThrough(new TextDecoderStream())
+    .pipeThrough(new TextLineStream());
+}
 
 async function loadTestData() {
   const arr = [];
@@ -8,9 +14,8 @@ async function loadTestData() {
     "src/data/1.csv",
   ];
   for (const csvFile of csvFiles) {
-    const fileReader = await Deno.open(csvFile);
-    for await (const line of readLines(fileReader)) {
-      if (!line) continue;
+    const file = await Deno.open(csvFile);
+    for await (const line of getLineStream(file)) {
       if (line.startsWith("#")) continue;
       // if (line.startsWith("#")) {
       //   line = line.slice(2);
@@ -24,9 +29,8 @@ async function loadTestData() {
 async function initYomiDict(yomiFile) {
   // https://jsben.ch/q4RPK
   const yomiDict = new Map();
-  const fileReader = await Deno.open(yomiFile);
-  for await (const line of readLines(fileReader)) {
-    if (!line) continue;
+  const file = await Deno.open(yomiFile);
+  for await (const line of getLineStream(file)) {
     line.split("\n").forEach((line) => {
       const arr = line.split(",");
       const yomi = arr[0];
