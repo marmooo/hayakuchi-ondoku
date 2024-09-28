@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std/assert/mod.ts";
+import { assertEquals } from "jsr:@std/assert";
 import { TextLineStream } from "jsr:@std/streams/text-line-stream";
 
 function getLineStream(file) {
