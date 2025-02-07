@@ -499,22 +499,20 @@ function initTime() {
   document.getElementById("time").textContent = gameTime;
 }
 
-let countdownTimer;
 function countdown() {
-  clearTimeout(countdownTimer);
   gameStart.classList.remove("d-none");
   playPanel.classList.add("d-none");
   scorePanel.classList.add("d-none");
   const counter = document.getElementById("counter");
   counter.innerText = 3;
-  countdownTimer = setInterval(() => {
+  const timer = setInterval(() => {
     const colors = ["skyblue", "greenyellow", "violet", "tomato"];
     if (parseInt(counter.innerText) > 1) {
       const t = parseInt(counter.innerText) - 1;
       counter.style.backgroundColor = colors[t];
       counter.innerText = t;
     } else {
-      clearTimeout(countdownTimer);
+      clearInterval(timer);
       gameStart.classList.add("d-none");
       playPanel.classList.remove("d-none");
       correctCount = 0;
