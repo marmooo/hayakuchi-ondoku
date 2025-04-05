@@ -1,4 +1,4 @@
-const CACHE_NAME = "2025-02-07 12:00";
+const CACHE_NAME = "2025-04-06 01:35";
 const urlsToCache = [
   "/hayakuchi-ondoku/",
   "/hayakuchi-ondoku/index.js",
