@@ -10,7 +10,7 @@
 ## Build
 
 ```
-deno run --allow-read --allow-write build.js
-deno test --allow-read
+deno run -RW build-dict.js
+deno test -R
 bash build.sh
 ```
