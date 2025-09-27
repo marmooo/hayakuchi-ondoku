@@ -1,6 +1,9 @@
+import { createWorker } from "https://cdn.jsdelivr.net/npm/emoji-particle@0.0.4/+esm";
+
 const replyPlease = document.getElementById("replyPlease");
 const reply = document.getElementById("reply");
 const gameTime = 120;
+const emojiParticle = initEmojiParticle();
 let yomiDict = new Map();
 let problem = "";
 let problems = [];
@@ -125,7 +128,30 @@ function loadVoices() {
     japaneseVoices = voices.filter((voice) => voice.lang == "ja-JP");
   });
 }
-loadVoices();
+
+function initEmojiParticle() {
+  const canvas = document.createElement("canvas");
+  Object.assign(canvas.style, {
+    position: "fixed",
+    pointerEvents: "none",
+    top: "0px",
+    left: "0px",
+  });
+  canvas.width = document.documentElement.clientWidth;
+  canvas.height = document.documentElement.clientHeight;
+  document.body.prepend(canvas);
+
+  const offscreen = canvas.transferControlToOffscreen();
+  const worker = createWorker();
+  worker.postMessage({ type: "init", canvas: offscreen }, [offscreen]);
+
+  globalThis.addEventListener("resize", () => {
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    worker.postMessage({ type: "resize", width, height });
+  });
+  return { canvas, offscreen, worker };
+}
 
 function speak(text) {
   speechSynthesis.cancel();
@@ -150,6 +176,16 @@ function getRandomInt(min, max) {
 }
 
 function nextProblem() {
+  for (let i = 0; i < correctCount; i++) {
+    emojiParticle.worker.postMessage({
+      type: "spawn",
+      options: {
+        particleType: "popcorn",
+        originX: Math.random() * emojiParticle.canvas.width,
+        originY: Math.random() * emojiParticle.canvas.height,
+      },
+    });
+  }
   const [sentence, yomi] = problems[getRandomInt(0, problems.length - 1)];
   problem = sentence;
   answer = yomi;
