@@ -547,7 +547,7 @@ function initTime() {
 }
 
 function countdown() {
-  speak(""); // unlock
+  speak("Ready"); // unlock
   gameStart.classList.remove("d-none");
   playPanel.classList.add("d-none");
   scorePanel.classList.add("d-none");
