@@ -156,9 +156,6 @@ function initEmojiParticle() {
 function speak(text) {
   speechSynthesis.cancel();
   const msg = new globalThis.SpeechSynthesisUtterance(text);
-  msg.onend = () => {
-    voiceInput.start();
-  };
   msg.voice = japaneseVoices[Math.floor(Math.random() * japaneseVoices.length)];
   msg.lang = "ja-JP";
   voiceInput.stop();
